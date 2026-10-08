@@ -13,11 +13,11 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Fix Nested App Directory Structure
+    - name: Fix Nested Directory
       run: |
         if [ -d "app/app" ]; then
-          echo "Nested app folder detected. Merging app/app into app/..."
-          cp -r app/app/* app/
+          echo "Fixing nested app directory structure..."
+          cp -r app/app/* app/ || true
           rm -rf app/app
         fi
 
@@ -27,7 +27,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Create Essential Settings Gradle
+    - name: Setup Settings Gradle
       run: |
         cat << 'EOF' > settings.gradle
         pluginManagement {
@@ -48,13 +48,13 @@ jobs:
         include ':app'
         EOF
 
-    - name: Generate Gradle Wrapper
+    - name: Generate Wrapper
       run: gradle wrapper --gradle-version 8.2
 
     - name: Make gradlew executable
       run: chmod +x gradlew
 
-    - name: Build APK with Gradle
+    - name: Build APK
       run: ./gradlew assembleDebug --stacktrace
 
     - name: Upload APK
