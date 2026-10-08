@@ -60,3 +60,13 @@ jobs:
       with:
         name: NetBond-APK
         path: app/build/outputs/apk/debug/app-debug.apk
+
+        - name: Clean and Fix Directory Structure
+      run: |
+        if [ -d "app/app" ]; then
+          echo "Moving files from app/app to app..."
+          mkdir temp_app
+          cp -r app/app/* temp_app/
+          rm -rf app
+          mv temp_app app
+        fi
