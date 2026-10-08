@@ -13,10 +13,10 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Fix Nested Directory
+    - name: Fix Directory Structure
       run: |
         if [ -d "app/app" ]; then
-          echo "Fixing nested app directory structure..."
+          echo "Moving nested app files..."
           cp -r app/app/* app/ || true
           rm -rf app/app
         fi
@@ -27,7 +27,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Setup Settings Gradle
+    - name: Ensure Settings Gradle
       run: |
         cat << 'EOF' > settings.gradle
         pluginManagement {
@@ -47,18 +47,3 @@ jobs:
         rootProject.name = "NetBond"
         include ':app'
         EOF
-
-    - name: Generate Wrapper
-      run: gradle wrapper --gradle-version 8.2
-
-    - name: Make gradlew executable
-      run: chmod +x gradlew
-
-    - name: Build APK
-      run: ./gradlew assembleDebug --stacktrace
-
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: NetBond-APK
-        path: app/build/outputs/apk/debug/app-debug.apk
