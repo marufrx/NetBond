@@ -13,13 +13,21 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
+    - name: Fix Nested App Directory Structure
+      run: |
+        if [ -d "app/app" ]; then
+          echo "Nested app folder detected. Merging app/app into app/..."
+          cp -r app/app/* app/
+          rm -rf app/app
+        fi
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Create Basic Gradle Files
+    - name: Create Essential Settings Gradle
       run: |
         cat << 'EOF' > settings.gradle
         pluginManagement {
