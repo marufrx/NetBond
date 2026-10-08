@@ -19,6 +19,27 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: Create Basic Gradle Files
+      run: |
+        cat << 'EOF' > settings.gradle
+        pluginManagement {
+            repositories {
+                google()
+                mavenCentral()
+                gradlePluginPortal()
+            }
+        }
+        dependencyResolutionManagement {
+            repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+            repositories {
+                google()
+                mavenCentral()
+            }
+        }
+        rootProject.name = "NetBond"
+        include ':app'
+        EOF
+
     - name: Generate Gradle Wrapper
       run: gradle wrapper --gradle-version 8.2
 
